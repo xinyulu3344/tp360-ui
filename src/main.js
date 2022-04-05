@@ -12,13 +12,24 @@ import {
   MenuItemGroup,
   MenuItem,
   Dropdown,
+  DropdownMenu,
   DropdownItem,
-  DropdownMenu
+  Row,
+  Col,
+  Card,
+  Table,
+  TableColumn,
+  Breadcrumb,
+  BreadcrumbItem,
+  Tag
 } from "element-ui";
+
 import "element-ui/lib/theme-chalk/index.css";
 import router from "./router";
 import "./assets/index.less";
 import store from './store'
+import http from 'axios'
+import './api/mock'
 
 Vue.config.productionTip = false;
 Vue.use(Button);
@@ -34,6 +45,16 @@ Vue.use(MenuItem);
 Vue.use(Dropdown);
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Card)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Tag)
+
+Vue.prototype.$http = http
 
 new Vue({
   store,
