@@ -13,3 +13,11 @@ export const getData = () => {
     url: '/home/getData',
   })
 }
+
+export const getUser = (params) => {
+  return axios.request({
+    url: '/api/user/getUser',
+    method: 'get',
+    params
+  })
+}

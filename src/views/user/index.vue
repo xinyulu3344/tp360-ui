@@ -26,15 +26,27 @@
         <el-button type="primary" @click="getList">搜索</el-button>
       </common-form>
     </div>
+
+    <common-table
+      :tableData="tableData"
+      :tableLabel="tableLabel"
+      :config="config"
+      @changePage="getList"
+      @edit="editUser"
+      @del="delUser"
+    ></common-table>
   </div>
 </template>
 
 <script>
 import CommonForm from '../../components/CommonForm.vue'
+import CommonTable from '../../components/CommonTable.vue'
+import { getUser } from '../../api/data'
 export default {
   name: 'User',
   components: {
     CommonForm,
+    CommonTable,
   },
   data() {
     return {
@@ -88,26 +100,56 @@ export default {
         {
           model: 'keyword',
           label: '',
-          type: 'input'
+          type: 'input',
         },
       ],
       searchForm: {
         keyword: '',
+      },
+      tableData: [],
+      tableLabel: [
+        {
+          prop: 'name',
+          label: '姓名',
+        },
+        {
+          prop: 'age',
+          label: '年龄',
+        },
+        {
+          prop: 'sex',
+          label: '性别',
+        },
+        {
+          prop: 'birth',
+          label: '出生日期',
+          width: 200,
+        },
+        {
+          prop: 'addr',
+          label: '地址',
+          width: 320,
+        },
+      ],
+      config: {
+        page: 1,
+        total: 30
       }
-
     }
   },
   methods: {
     confirm() {
       if (this.operateType === 'edit') {
-        this.$http.post('/api/user/edit', this.operateForm).then(res => {
+        this.$http.post('/api/user/edit', this.operateForm).then((res) => {
           console.log('edit: ', res)
           this.isShow = false
+          this.getList()
         })
       } else {
-        this.$http.post('/api/user/add', this.operateForm).then(res => {
+        this.$http.post('/api/user/add', this.operateForm).then((res) => {
           console.log('add', res)
           this.isShow = false
+          this.getList()
         })
       }
     },
@@ -122,7 +164,47 @@ export default {
         sex: '',
       }
     },
-    getList() {}
+    editUser(row) {
+      this.operateType = 'edit'
+      this.isShow = true
+      this.operateForm = row
+    },
+    delUser(row) {
+      this.$confirm("此操作将永久删除该用户，是否继续？", "提示", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        const id = row.id
+        this.$http.get("/api/user/del", {
+          params: {id}
+        }).then(() => {
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          })
+          this.getList()
+        })
+      })
+    },
+    getList(name = '') {
+      this.config.loading = true
+      name ? (this.config.page = 1) : ''
+      getUser({
+        page: this.config.page,
+        name
+      }).then(res => {
+        this.tableData = res.list.map(item => {
+          item.sexLabel = item.sex === 0 ? '女' : '男'
+          return item
+        })
+        this.config.total = res.count
+        this.config.loading = false
+      })
+    },
+  },
+  created() {
+    this.getList()
   }
 }
 </script>

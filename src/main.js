@@ -29,7 +29,8 @@ import {
   Option,
   Switch,
   DatePicker,
-  Dialog
+  Dialog,
+  Pagination,
 } from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
@@ -69,6 +70,7 @@ Vue.use(Option)
 Vue.use(Switch)
 Vue.use(DatePicker)
 Vue.use(Dialog)
+Vue.use(Pagination)
 
 Vue.prototype.$http = http
 
