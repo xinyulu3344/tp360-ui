@@ -23,7 +23,7 @@
         :inline="true"
         ref="form"
       >
-        <el-button type="primary" @click="getList">搜索</el-button>
+        <el-button type="primary" @click="getList(searchForm.keyword)">搜索</el-button>
       </common-form>
     </div>
 
@@ -133,8 +133,8 @@ export default {
       ],
       config: {
         page: 1,
-        total: 30
-      }
+        total: 30,
+      },
     }
   },
   methods: {
@@ -170,21 +170,23 @@ export default {
       this.operateForm = row
     },
     delUser(row) {
-      this.$confirm("此操作将永久删除该用户，是否继续？", "提示", {
-        confirmButtonText: "确认",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('此操作将永久删除该用户，是否继续？', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(() => {
         const id = row.id
-        this.$http.get("/api/user/del", {
-          params: {id}
-        }).then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功"
+        this.$http
+          .post('/api/user/del', {
+            params: { id },
           })
-          this.getList()
-        })
+          .then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功',
+            })
+            this.getList()
+          })
       })
     },
     getList(name = '') {
@@ -192,9 +194,10 @@ export default {
       name ? (this.config.page = 1) : ''
       getUser({
         page: this.config.page,
-        name
-      }).then(res => {
-        this.tableData = res.list.map(item => {
+        name,
+      }).then(({data: res}) => {
+        console.log("aaaaa", res)
+        this.tableData = res.list.map((item) => {
           item.sexLabel = item.sex === 0 ? '女' : '男'
           return item
         })
@@ -205,7 +208,7 @@ export default {
   },
   created() {
     this.getList()
-  }
+  },
 }
 </script>
 

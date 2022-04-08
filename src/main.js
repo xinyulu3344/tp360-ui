@@ -31,6 +31,8 @@ import {
   DatePicker,
   Dialog,
   Pagination,
+  MessageBox,
+  Message
 } from "element-ui";
 
 import "element-ui/lib/theme-chalk/index.css";
@@ -73,6 +75,8 @@ Vue.use(Dialog)
 Vue.use(Pagination)
 
 Vue.prototype.$http = http
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$message = Message
 
 new Vue({
   store,
